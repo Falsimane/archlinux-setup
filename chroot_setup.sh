@@ -64,8 +64,8 @@ ok "Root + utilisateur '$USER_CUSTOM' (wheel,docker) configurés"
 # ============================================================================
 step "9 — Configuration de l'Initramfs"
 
-sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt sd-lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
-ok "Hooks mkinitcpio configurés (sd-encrypt + sd-lvm2)"
+sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
+ok "Hooks mkinitcpio configurés (sd-encrypt + lvm2)"
 
 # ============================================================================
 # ÉTAPE 10 — Configuration du Boot (UKI)
@@ -101,9 +101,14 @@ bootctl install
 ok "systemd-boot installé"
 
 # 11.2 — Clés Secure Boot
-sbctl create-keys && sbctl enroll-keys
-sbctl sign -s /efi/EFI/Linux/arch-linux.efi
-ok "UKI signée avec clés Secure Boot personnelles"
+sbctl create-keys
+if sbctl enroll-keys 2>/dev/null; then
+    sbctl sign -s /efi/EFI/Linux/arch-linux.efi
+    ok "UKI signée avec clés Secure Boot personnelles"
+else
+    warn "Secure Boot pas en mode Setup — activez-le dans le BIOS puis lancez :"
+    warn "  sbctl enroll-keys && sbctl sign -s /efi/EFI/Linux/arch-linux.efi"
+fi
 
 # 11.3 — Pacman Hook pour re-signature automatique
 mkdir -p /etc/pacman.d/hooks
