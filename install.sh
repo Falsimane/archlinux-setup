@@ -226,6 +226,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 ok "fstab généré"
 
 # Passage sécurisé des mots de passe via fichier temporaire
+mkdir -p /mnt/tmp
 PASS_FILE="/mnt/tmp/.setup_pass"
 printf '%s\n%s\n%s' "$PASS_ROOT" "$PASS_USER" "$PASS_LUKS" > "$PASS_FILE"
 chmod 600 "$PASS_FILE"
