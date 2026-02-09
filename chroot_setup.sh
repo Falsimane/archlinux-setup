@@ -138,7 +138,7 @@ step "BONUS — Hyprland (VMware Ready)"
 
 pacman -S --noconfirm hyprland foot waybar wofi mako swaybg wl-clipboard
 
-sudo -u "$USER_CUSTOM" bash <<USEREOF
+su "$USER_CUSTOM" -s /bin/bash <<USEREOF
 mkdir -p /home/$USER_CUSTOM/.config/{hypr,waybar,foot}
 
 cat <<'HYPRCONF' > /home/$USER_CUSTOM/.config/hypr/hyprland.conf
