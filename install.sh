@@ -195,7 +195,7 @@ pacstrap -K /mnt \
     networkmanager sudo-rs sbctl neovim \
     ${UCODE} \
     docker git \
-    open-vm-tools xf86-video-vmware mesa \
+    open-vm-tools mesa \
     man-db man-pages texinfo
 
 ok "Système de base installé"
