@@ -138,10 +138,10 @@ step "BONUS — Hyprland (VMware Ready)"
 
 pacman -S --noconfirm hyprland foot waybar wofi mako swaybg wl-clipboard
 
-su "$USER_CUSTOM" -s /bin/bash <<USEREOF
-mkdir -p /home/$USER_CUSTOM/.config/{hypr,waybar,foot}
+HYPR_HOME="/home/$USER_CUSTOM/.config"
+mkdir -p "$HYPR_HOME"/{hypr,waybar,foot}
 
-cat <<'HYPRCONF' > /home/$USER_CUSTOM/.config/hypr/hyprland.conf
+cat <<'HYPRCONF' > "$HYPR_HOME/hypr/hyprland.conf"
 # === VMware Compatibility ===
 env = WLR_NO_HARDWARE_CURSORS,1
 env = WLR_RENDERER_ALLOW_SOFTWARE,1
@@ -172,17 +172,17 @@ decoration {
 }
 
 # === Keybinds ===
-\$mainMod = SUPER
-bind = \$mainMod, RETURN, exec, foot
-bind = \$mainMod, Q, killactive,
-bind = \$mainMod, SPACE, exec, wofi --show drun
-bind = \$mainMod, M, exit,
+$mainMod = SUPER
+bind = $mainMod, RETURN, exec, foot
+bind = $mainMod, Q, killactive,
+bind = $mainMod, SPACE, exec, wofi --show drun
+bind = $mainMod, M, exit,
 
 # === Autostart ===
 exec-once = waybar & mako & swaybg -c '#1e1e2e'
 HYPRCONF
-USEREOF
 
+chown -R "$USER_CUSTOM:$USER_CUSTOM" "/home/$USER_CUSTOM/.config"
 ok "Hyprland configuré pour VMware"
 
 # ============================================================================
