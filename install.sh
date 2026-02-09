@@ -97,11 +97,10 @@ step "2 — Partitionnement GPT"
 info "Nettoyage d'une éventuelle exécution précédente..."
 umount -R /mnt 2>/dev/null || true
 swapoff -a 2>/dev/null || true
-if [[ -d /dev/vg0 ]]; then
-    lvremove -f vg0 2>/dev/null || true
-    vgremove -f vg0 2>/dev/null || true
-fi
-pvremove -f /dev/mapper/cryptlvm 2>/dev/null || true
+# Désactiver LVM (sans supprimer, juste désactiver)
+vgchange -an vg0 2>/dev/null || true
+# Forcer la suppression des device-mapper restants
+dmsetup remove_all -f 2>/dev/null || true
 cryptsetup close cryptlvm 2>/dev/null || true
 wipefs -af "${DRIVE}"* 2>/dev/null || true
 ok "Disque prêt (état propre)"
@@ -109,6 +108,10 @@ ok "Disque prêt (état propre)"
 sgdisk -Z "$DRIVE"
 sgdisk -n 1:0:+"${REC_EFI}G" -t 1:ef00 "$DRIVE"
 sgdisk -n 2:0:0 -t 2:8309 "$DRIVE"
+
+# Forcer le kernel à relire la nouvelle table de partitions
+partprobe "$DRIVE"
+sleep 2
 
 # Détecter les noms de partitions (nvme vs sda)
 PART_EFI=$(lsblk -lno NAME "$DRIVE" | sed -n '2p')
