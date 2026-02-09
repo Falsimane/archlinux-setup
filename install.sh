@@ -93,6 +93,19 @@ fi
 # ============================================================================
 step "2 — Partitionnement GPT"
 
+# Nettoyage complet si relance après échec
+info "Nettoyage d'une éventuelle exécution précédente..."
+umount -R /mnt 2>/dev/null || true
+swapoff -a 2>/dev/null || true
+if [[ -d /dev/vg0 ]]; then
+    lvremove -f vg0 2>/dev/null || true
+    vgremove -f vg0 2>/dev/null || true
+fi
+pvremove -f /dev/mapper/cryptlvm 2>/dev/null || true
+cryptsetup close cryptlvm 2>/dev/null || true
+wipefs -af "${DRIVE}"* 2>/dev/null || true
+ok "Disque prêt (état propre)"
+
 sgdisk -Z "$DRIVE"
 sgdisk -n 1:0:+"${REC_EFI}G" -t 1:ef00 "$DRIVE"
 sgdisk -n 2:0:0 -t 2:8309 "$DRIVE"
