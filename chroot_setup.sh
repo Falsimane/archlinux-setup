@@ -52,8 +52,7 @@ step "8 — Comptes et sudo"
 echo "root:$PASS_ROOT" | chpasswd
 useradd -m -G wheel,docker "$USER_CUSTOM"
 echo "$USER_CUSTOM:$PASS_USER" | chpasswd
-echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel
-chmod 440 /etc/sudoers.d/wheel
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 ok "Root + utilisateur '$USER_CUSTOM' (wheel,docker) configurés"
 
 # ============================================================================
