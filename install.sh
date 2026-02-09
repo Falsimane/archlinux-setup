@@ -69,9 +69,9 @@ ask_pass() {
     done
 }
 
-ask_pass "Password LUKS (chiffrement disque)" 20 PASS_LUKS
-ask_pass "Password Root" 12 PASS_ROOT
-ask_pass "Password Utilisateur ($MY_USER)" 12 PASS_USER
+ask_pass "Password LUKS (chiffrement disque)" 2 PASS_LUKS
+ask_pass "Password Root" 2 PASS_ROOT
+ask_pass "Password Utilisateur ($MY_USER)" 2 PASS_USER
 
 # Calcul dynamique des partitions
 REC_EFI=1
@@ -132,6 +132,7 @@ ok "Conteneur LUKS ouvert (avec TRIM/discard)"
 # ============================================================================
 step "2.4 — Sauvegarde en-tête LUKS"
 
+rm -f /root/luks-header-backup.img
 cryptsetup luksHeaderBackup "$DEV_LUKS" --header-backup-file /root/luks-header-backup.img
 ok "En-tête LUKS sauvegardé dans /root/luks-header-backup.img"
 warn "⚠️  COPIEZ CE FICHIER SUR UNE CLÉ USB CHIFFRÉE !"
