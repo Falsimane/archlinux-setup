@@ -49,12 +49,29 @@ read -rp "Hostname : " MY_HOSTNAME
 read -rp "User : " MY_USER
 [[ -n "$MY_USER" ]] || die "Utilisateur vide"
 
-read -rs -p "Password LUKS (chiffrement disque) : " PASS_LUKS; echo
-[[ ${#PASS_LUKS} -ge 20 ]] || die "Mot de passe LUKS trop court (minimum 20 caractères)"
-read -rs -p "Password Root : " PASS_ROOT; echo
-[[ ${#PASS_ROOT} -ge 12 ]] || die "Mot de passe root trop court (minimum 12 caractères)"
-read -rs -p "Password Utilisateur ($MY_USER) : " PASS_USER; echo
-[[ ${#PASS_USER} -ge 12 ]] || die "Mot de passe utilisateur trop court (minimum 12 caractères)"
+# Fonction : demande un mot de passe 2x avec validation de longueur
+ask_pass() {
+    local label="$1" min_len="$2" result_var="$3"
+    while true; do
+        read -rs -p "$label (min ${min_len} car.) : " pass1; echo
+        if [[ ${#pass1} -lt $min_len ]]; then
+            warn "Trop court (${#pass1}/${min_len} caractères). Réessayez."
+            continue
+        fi
+        read -rs -p "Confirmez $label : " pass2; echo
+        if [[ "$pass1" != "$pass2" ]]; then
+            warn "Les mots de passe ne correspondent pas. Réessayez."
+            continue
+        fi
+        eval "$result_var=\$pass1"
+        ok "$label défini ✓"
+        break
+    done
+}
+
+ask_pass "Password LUKS (chiffrement disque)" 20 PASS_LUKS
+ask_pass "Password Root" 12 PASS_ROOT
+ask_pass "Password Utilisateur ($MY_USER)" 12 PASS_USER
 
 # Calcul dynamique des partitions
 REC_EFI=1
