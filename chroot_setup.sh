@@ -18,7 +18,7 @@ USER_CUSTOM=$2
 LUKS_UUID=$3
 
 # Mots de passe via fichier sécurisé (créé par install.sh)
-PASS_FILE="/tmp/.setup_pass"
+PASS_FILE="/root/.setup_pass"
 [[ -f "$PASS_FILE" ]] || { echo "Fichier mot de passe introuvable"; exit 1; }
 PASS_ROOT=$(sed -n '1p' "$PASS_FILE")
 PASS_USER=$(sed -n '2p' "$PASS_FILE")
