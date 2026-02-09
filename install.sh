@@ -226,8 +226,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 ok "fstab généré"
 
 # Passage sécurisé des mots de passe via fichier temporaire
-mkdir -p /mnt/tmp
-PASS_FILE="/mnt/tmp/.setup_pass"
+PASS_FILE="/mnt/root/.setup_pass"
 printf '%s\n%s\n%s' "$PASS_ROOT" "$PASS_USER" "$PASS_LUKS" > "$PASS_FILE"
 chmod 600 "$PASS_FILE"
 
@@ -242,7 +241,7 @@ info "Entrée dans le chroot..."
 arch-chroot /mnt ./chroot_setup.sh "$MY_HOSTNAME" "$MY_USER" "$LUKS_UUID"
 
 # Nettoyage
-rm -f /mnt/chroot_setup.sh /mnt/tmp/.setup_pass
+rm -f /mnt/chroot_setup.sh /mnt/root/.setup_pass
 unset PASS_LUKS PASS_ROOT PASS_USER
 
 # ============================================================================
