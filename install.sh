@@ -209,10 +209,10 @@ fi
 pacstrap -K /mnt \
     base linux linux-firmware \
     lvm2 btrfs-progs cryptsetup \
-    networkmanager sudo-rs sbctl neovim \
+    networkmanager sudo sbctl neovim \
     ${UCODE} \
     docker git \
-    open-vm-tools mesa \
+    open-vm-tools gtkmm3 mesa xf86-input-vmmouse \
     man-db man-pages texinfo
 
 ok "Système de base installé"
@@ -255,5 +255,11 @@ echo ""
 warn "Avant de rebooter :"
 warn "  1. Copiez /root/luks-header-backup.img sur une clé USB"
 warn "  2. Activez Secure Boot dans le BIOS/UEFI"
+warn "  3. Ajoutez ces lignes au fichier .vmx de la VM (côté host) :"
+warn "     mem.hotadd = \"FALSE\""
+warn "     mouse.vusb.enable = \"TRUE\""
+warn "     mouse.vusb.useBasicMouse = \"FALSE\""
+warn "     keyboard.allowBothIRQs = \"FALSE\""
+warn "     keyboard.vusb.enable = \"TRUE\""
 echo ""
 info "Puis : umount -R /mnt && reboot"
